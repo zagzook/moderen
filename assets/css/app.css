@@ -1,0 +1,179 @@
+@font-face {
+  font-family: 'zagdokuFont';
+  src: url(../fonts/zagDokuFont.ttf) format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'libreFranklinFont-Regular';
+  src: url(../fonts/LibreFranklin-VariableFont_wght.ttf) format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'libreFranklinFont-Bold';
+  src: url(../fonts/LibreFranklin-VariableFont_wght.ttf) format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'winkyRoughFont-Regular';
+  src: url(../fonts/WinkyRough-VariableFont_wght.ttf) format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'winkyRoughFont-Bold';
+  src: url(../fonts/WinkyRough-VariableFont_wght.ttf) format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+:root {
+  --bg-main: #f0f2f5;
+  --bg-body: #fff;
+  --color-txt: #000;
+  --filled-color: #000;
+  --filled-bg: #caf0f8;
+
+  --white: #fff;
+  --cyan: #ca5611;
+  --red: #e91e63;
+  --black: #000;
+
+  --nav-size: 22.5rem;
+  --logo-img-size: 15rem;
+  --sudoku-cell-size: 5rem;
+
+  --border-radius: 1rem;
+
+  --space-y: 2rem;
+
+  --gap: 0.5rem;
+
+  --font-size: 2.4rem;
+  --font-size-lg: 3.2rem;
+  --font-size-xl: 4.8rem;
+}
+
+.dark {
+  --bg-main: #2a2a38;
+  --bg-body: #1a1a2e;
+  --color-txt: #6a6a6a;
+  --filled-color: #4f4f63;
+  --filled-bg: #000;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-family: 'winkyRoughFont-Regular', sans-serif;
+  font-size: var(--font-size);
+  height: 100vh;
+  background-color: var(--bg-body);
+  overflow: hidden;
+  user-select: none;
+}
+
+input {
+  font-family: 'winkyRoughFont-Regular';
+  border: 0.2rem solid var(--bg-main);
+  color: var(--color-txt);
+}
+
+input:hover,
+input:focus {
+  border-color: var(--cyan);
+}
+
+a {
+  text-decoration: none;
+  color: unset;
+}
+
+ul {
+  list-style-type: none;
+}
+
+nav {
+  background-color: var(--bg-body);
+  color: var(--color-txt);
+  position: fixed;
+  top: 0;
+  width: 100%;
+  box-shadow: 0.5rem 0.2rem var(--bg-main);
+  z-index: 100;
+}
+
+.nav-container {
+  max-width: 96.8rem;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  padding: 0 4rem;
+  height: var(--nav-size);
+}
+
+.info-bar-container {
+  width: 70%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0;
+}
+
+.nav-logo {
+  font-family: 'winkyRoughFont-Bold';
+  font-size: var(--font-size-xl);
+  color: var(--cyan);
+}
+
+.nav-logo img {
+  height: var(--logo-img-size);
+}
+
+.info-date-container,
+.info-issue-container {
+  color: var(--cyan);
+  font-size: var(--font-size-sm);
+}
+
+.dark-mode-toggle {
+  background-color: var(--cyan);
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
+  color: var(--white);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+}
+
+.bxs-sun {
+  display: none;
+}
+
+.bxs-moon {
+  display: inline-block;
+}
+
+.dark .bxs-sun {
+  display: inline-block;
+}
+
+.dark .bxs-moon {
+  display: none;
+}
