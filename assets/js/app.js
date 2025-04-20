@@ -22,6 +22,8 @@ dark_mode.addEventListener('click', () => {
 const name_input = document.querySelector('#input-name')
 const start_screen = document.querySelector('#start-screen')
 
+let cells
+
 let mode_index = 0
 let mode = CONSTANT.MODE_INDEX[mode_index]
 
@@ -81,6 +83,18 @@ document.querySelector('#btn-play').addEventListener('click', () => {
 
 const getGameInfo = () => JSON.parse(localStorage.getItem('game'))
 
+// Add space for each 9 cell block
+function initGameGrid() {
+  let index = 0
+  for (let i = 0; i < Math.pow(CONSTANT.GRID_SIZE, 2); i++) {
+    let row = Math.floor(i / CONSTANT.GRID_SIZE)
+    let col = i % CONSTANT.GRID_SIZE
+    if (row === 2 || row === 5) cells[index].style.marginBottom = '10px'
+    if (col === 2 || col === 5) cells[index].style.marginRight = '10px'
+    index++
+  }
+}
+// ---------------
 const init = () => {
   const is_dark_mode = JSON.parse(localStorage.getItem('darkMode'))
   body.classList.toggle(is_dark_mode ? 'dark' : 'light')
@@ -92,6 +106,21 @@ const init = () => {
   const game = getGameInfo()
 
   document.querySelector('#btn-continue').style.display = game ? 'grid' : 'none'
+  setGameGrid(CONSTANT.GRID_SIZE)
+  initGameGrid()
+}
+
+function setGameGrid(grid) {
+  for (let row = 0; row < grid; row++) {
+    for (let col = 0; col < grid; col++) {
+      let tile = document.createElement('div')
+      tile.id = `${row}-${col}`
+      tile.classList.add('main-grid-cell')
+      tile.innerHTML = row
+      document.getElementById('main-sudoku-grid').append(tile)
+    }
+  }
+  cells = document.querySelectorAll('.main-grid-cell')
 }
 
 init()

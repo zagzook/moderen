@@ -49,25 +49,46 @@
     <div class="main">
       <div class="screen">
         <!-- start screen  -->
-        <div class="start-screen active" id="start-screen">
+        <div class="start-screen" id="start-screen">
           <input
             type="text"
             placeholder="Your Name"
             maxlength="11"
             class="input-name"
             id="input-name" />
-          <div class="btn btn-mode" id="btn-mode"">Numbers</div>
-          <div class="btn btn-grid" id="btn-grid"">9X9</div>
-          <div class="btn btn-game-type" id="btn-game-type"">Regular</div>
-          <div class="btn btn-level" id="btn-level">Easy</div>
+          <div class="game-play-container">
+            <div class="directions">Select the Mode</div>
+            <div class="btn btn-mode" id="btn-mode">Numbers</div>
+          </div>
+          <div class="game-play-container">
+            <div class="directions">Select the Grid</div>
+            <div class="btn btn-grid" id="btn-grid">9X9</div>
+          </div>
+          <div class="game-play-container">
+            <div class="directions">Select the Game Type</div>
+            <div class="btn btn-game-type" id="btn-game-type">Regular</div>
+          </div>
+          <div class="game-play-container">
+            <div class="directions">Select the Level</div>
+            <div class="btn btn-level" id="btn-level">Easy</div>
+          </div>
+
           <div class="btn" id="btn-continue">Continue</div>
           <div class="btn btn-cyan" id="btn-play">New Game</div>
+          <!-- end start screen  -->
         </div>
-        <!-- end start screen  -->
-         <!-- game screen  -->
-          <div class="game-screen" id="game-screen">
-</div>  
-          <!-- end game screen   -->
+        <!-- game screen  -->
+        <div class="game-screen" id="game-screen">
+          <div class="main-game active" id="main-game">
+            <div class="main-sudoku-grid" id="main-sudoku-grid">
+              <!-- main-sudoku-grid -->
+            </div>
+            <div class="main-game-info">
+              <div class="main-game-info-box main-game-info-name"></div>
+            </div>
+          </div>
+        </div>
+        <!-- end game screen   -->
       </div>
     </div>
     <!-- end main  -->

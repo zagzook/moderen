@@ -36,6 +36,7 @@
 :root {
   --bg-main: #f0f2f5;
   --bg-body: #fff;
+  --bg-non-body: #515155;
   --color-txt: #000;
   --filled-color: #000;
   --filled-bg: #caf0f8;
@@ -46,6 +47,7 @@
   --black: #000;
 
   --nav-size: 22.5rem;
+  --game-board-top-margin: 10rem;
   --logo-img-size: 15rem;
   --sudoku-cell-size: 5rem;
 
@@ -53,7 +55,7 @@
 
   --space-y: 2rem;
 
-  --gap: 0.5rem;
+  --gap: 0.25rem;
 
   --font-size: 2.4rem;
   --font-size-lg: 3.2rem;
@@ -63,7 +65,7 @@
 .dark {
   --bg-main: #2a2a38;
   --bg-body: #1a1a2e;
-  --color-txt: #6a6a6a;
+  --color-txt: #c2bfbf;
   --filled-color: #4f4f63;
   --filled-bg: #000;
 }
@@ -223,9 +225,23 @@ nav {
   font-size: var(--font-size-lg);
   text-align: center;
 }
+.directions {
+  color: var(--color-txt);
+}
+
+.game-play-container {
+  border: 0.2rem solid var(--cyan);
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-y);
+  justify-content: center;
+  align-items: center;
+}
 
 .btn {
-  height: 8rem;
+  height: 6rem;
   width: 28rem;
   background-color: var(--bg-main);
   color: var(--color-txt);
@@ -262,4 +278,66 @@ nav {
   100% {
     transform: translateY(0);
   }
+}
+
+.main-game {
+  font-family: 'zagdokuFont';
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 3rem 0;
+  transform: translate(-100%);
+  transition: transform 0.3s ease-in-out;
+}
+
+.main-game.active {
+  transform: translate(0);
+}
+
+.main-sudoku-grid {
+  display: grid;
+  background-color: var(--bg-non-body);
+  border: 0.2rem solid var(--bg-non-body);
+  grid-template-columns: repeat(9, auto);
+  gap: var(--gap);
+}
+
+.main-grid-cell {
+  width: var(--sudoku-cell-size);
+  height: var(--sudoku-cell-size);
+  /* border-radius: var(--border-radius); */
+  background-color: var(--bg-main);
+  color: var(--cyan);
+  display: grid;
+  place-items: center;
+  font-size: var(--font-size);
+  cursor: pointer;
+}
+
+.main-grid-cell.filled {
+  background-color: var(--filled-bg);
+  color: var(--filled-color);
+}
+
+.main-grid-cell.selected {
+  background-color: var(--cyan);
+  color: var(--white);
+}
+
+.main-grid-cell:hover {
+  border: 0.2rem solid var(--cyan);
+}
+
+.main-grid-cell.hover {
+  border: 0.3rem solid var(--cyan);
+}
+
+.dark .main-grid-cell.hover {
+  border: 0.1rem solid var(--cyan);
+}
+
+.main-grid-cell.err {
+  background-color: var(--red);
+  color: var(--white);
 }
