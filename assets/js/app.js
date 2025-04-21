@@ -50,6 +50,7 @@ let sa = undefined
 let sa_solution = undefined
 let sa_board = undefined
 let sa_keys = undefined
+let sa_edition = undefined
 
 let mode_index = 0
 let mode = CONSTANT.MODE_INDEX[mode_index]
@@ -130,11 +131,17 @@ level_input.addEventListener('click', (e) => {
 
 document.querySelector('#btn-play').addEventListener('click', () => {
   if (name_input.value.length > 0) {
+    document.getElementById('info-issue-container').classList.add('unhide')
+    document.getElementById('info-issue-container').classList.remove('hide')
     setGameVariables()
     setGameGrid(gridSize)
     initGameGrid()
     startGame()
     setNumberKeys(gridSize)
+    console.log('sa_edition', sa_edition)
+    document.getElementById(
+      'info-issue-container'
+    ).innerHTML = `Edition: ${sa_edition}`
   } else {
     name_input.classList.add('input-err')
     setTimeout(() => {
@@ -202,6 +209,7 @@ function initSudoku() {
   sa_solution = [...sa.solution]
   sa_board = [...sa.board]
   sa_keys = [...sa.keys]
+  sa_edition = sa.edition
 
   console.table(sa_board)
 
@@ -256,6 +264,8 @@ function getGreetingTime() {
 }
 
 function returnToStartScreen() {
+  document.getElementById('info-issue-container').classList.add('hide')
+  document.getElementById('info-issue-container').classList.remove('unhide')
   clearInterval(timer)
   clearSudoku()
   clearKeyboard()

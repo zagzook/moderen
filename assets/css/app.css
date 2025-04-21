@@ -158,11 +158,17 @@ nav {
   font-size: var(--font-size-sm);
 }
 
+.info-issue-container {
+  text-align: center;
+  padding-bottom: 1rem;
+}
+
 .dark-mode-toggle {
   background-color: var(--cyan);
   padding: 0.5rem 2rem;
   border-radius: var(--border-radius);
   color: var(--white);
+
   font-size: var(--font-size-sm);
   cursor: pointer;
 }
@@ -316,6 +322,14 @@ nav {
   font-family: 'zagdokuFont';
   font-size: var(--font-size);
   cursor: pointer;
+}
+
+.hide {
+  display: none;
+}
+
+.unhide {
+  display: inline-block;
 }
 
 .main-grid-cell.filled {

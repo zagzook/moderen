@@ -5,6 +5,7 @@ import { CONSTANT_KEYBOARDS } from '../data/KEYBOARDS.js'
 
 export function sudokuGen(mode, grid, gameType, level) {
   let game = {}
+  let edition
   switch (grid) {
     case '4X4':
       game = sudoku4x4Gen(mode, 4, gameType, level)
@@ -21,8 +22,9 @@ export function sudokuGen(mode, grid, gameType, level) {
         solution: game.solution,
         board: game.board,
         keys: game.keys,
+        edition: game.edition,
       }
-      break
+
     default:
       break
   }
@@ -37,6 +39,7 @@ function sudoku9x9Gen(mode, grid, gameType, level) {
   let getBoard = []
   let getKeys = []
   let getBoardTemplate = []
+
   switch (gameType) {
     case 'Regular':
       totalSolutions = NINE_SUDOKU_GRIDS.NINE_REGULAR.length
@@ -75,13 +78,18 @@ function sudoku9x9Gen(mode, grid, gameType, level) {
     default:
       break
   }
-  getKeys = CONSTANT_KEYBOARDS.KEYBOARD_9X9_DIGITS[rand(totalKeys)]
-  getSolution = NINE_SUDOKU_GRIDS.NINE_REGULAR[rand(totalSolutions)]
+  const seedSloution = rand(totalSolutions)
+  const seedBoardTemplate = rand(totalBoardTemplates)
+  const seedKeys = rand(totalKeys)
+  const getEdition = `9X9-${seedSloution}${seedBoardTemplate}${seedKeys}`
+  console.log(getEdition)
+  getKeys = CONSTANT_KEYBOARDS.KEYBOARD_9X9_DIGITS[seedKeys]
+  getSolution = NINE_SUDOKU_GRIDS.NINE_REGULAR[seedSloution]
   getSolution = rearangeByKeys(getSolution, getKeys)
   getKeys = createKeyBoard(mode, getKeys)
   getSolution = converBoardToMode(getSolution, mode, getKeys)
   getBoardTemplate = setBoardTemplate(
-    BOARD_TEMPLATES.BOARD_9X9_EASY[rand(totalBoardTemplates)],
+    BOARD_TEMPLATES.BOARD_9X9_EASY[seedBoardTemplate],
     getSolution
   )
 
@@ -95,6 +103,7 @@ function sudoku9x9Gen(mode, grid, gameType, level) {
     solution: getSolution,
     board: getBoard,
     keys: getKeys,
+    edition: getEdition,
   }
 }
 function sudoku8x8Gen(mode, grid, gameType, level) {
@@ -108,7 +117,8 @@ function sudoku4x4Gen(mode, grid, gameType, level) {
 }
 
 function rand(max) {
-  return Math.floor(Math.random() * max)
+  let edition = Math.floor(Math.random() * max)
+  return edition
 }
 
 function breakDown(board, gridSize) {
