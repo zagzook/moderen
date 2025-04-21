@@ -233,7 +233,7 @@ nav {
 }
 
 .game-play-container {
-  border-bottom: 0.2rem solid var(--cyan);
+  border-top: 0.2rem solid var(--cyan);
   padding: 2rem 2rem;
   display: flex;
   flex-direction: column;
@@ -320,7 +320,7 @@ nav {
 
 .main-grid-cell.filled {
   background-color: var(--filled-bg);
-  color: var(--filled-color);
+  color: var(--cyan);
 }
 
 .main-grid-cell.selected {

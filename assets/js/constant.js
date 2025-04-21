@@ -1,6 +1,5 @@
 export const CONSTANT = {
   UNASSIGNED: 0,
-  GRID_SIZE: 9,
   BOX_SIZE: 3,
   NUMBERS: [1, 2, 3, 4, 5, 6, 7, 8, 9],
   MODE_NAME: [
@@ -14,8 +13,41 @@ export const CONSTANT = {
   MODE_INDEX: [0, 1, 2, 3, 4, 5],
   GRID_NAME: ['4X4', '6X6', '8X8', '9X9'],
   GRID_INDEX: [0, 1, 2, 3],
-  GAME_TYPE_NAME: ['Regular', 'Hyper'],
-  GAME_TYPE_INDEX: [0, 1],
+  GRID_SIZE: [4, 6, 8, 9],
+  GAME_TYPE_NAME: [
+    'Regular',
+    'Hyper',
+    'Center',
+    'Outside',
+    'Inside',
+    'Arrow',
+    'Sudoku X',
+  ],
   LEVEL_NAME: ['Easy', 'Normal', 'Hard'],
   LEVEL_INDEX: [0, 1, 2],
+  GAME_TYPE_INDEX: [0, 1, 2, 3, 4, 5, 6],
+  GRID_4X4: {
+    NAME: '4X4',
+    MODE: [0, 1, 2],
+    GAME: [0, 1, 2, 3, 4, 5, 6],
+    LEVEL: [0, 1, 2],
+  },
+  GRID_6X6: {
+    NAME: '6X6',
+    MODE: [0, 1, 2, 3, 4, 5],
+    GAME: [0, 1, 2],
+    LEVEL: [0, 1, 2],
+  },
+  GRID_8X8: {
+    NAME: '8X8',
+    MODE: [0, 1, 2, 3, 4, 5],
+    GAME: [0, 1, 2, 3, 4],
+    LEVEL: [0, 1, 2],
+  },
+  GRID_9X9: {
+    NAME: '9X9',
+    MODE: [0, 1, 2, 3, 4, 5],
+    GAME: [0, 1, 2, 3, 4, 5, 6],
+    LEVEL: [0, 1, 2],
+  },
 }
