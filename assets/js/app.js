@@ -1,5 +1,5 @@
 import { CONSTANT } from './constant.js'
-import { sudokuGen } from './sudoku.js'
+import { sudokuGen, sudokuCheck } from './sudoku.js'
 
 const body = document.body
 const dark_mode = document.querySelector('#dark-mode-toggle')
@@ -8,6 +8,10 @@ const player_name = document.querySelector('#player-name')
 const game_level = document.querySelector('#game-level')
 const game_timer = document.querySelector('#game-timer')
 const todays_date = document.querySelector('#info-date-container')
+const erase_btn = document.querySelector('#btn-erase')
+const reset_btn = document.querySelector('#btn-reset')
+const mistakes_btn = document.querySelector('#btn-mistakes')
+const hint_btn = document.querySelector('#btn-hint')
 
 const logo_dark = './assets/images/logos/Logo-Dark.png'
 const logo_light = './assets/images/logos/Logo-Light.png'
@@ -45,12 +49,14 @@ let gridInput
 let gridSize = 9
 let gameTypeInput
 let levelInput
+let boxSize
 let seed = 1
 let sa = undefined
 let sa_solution = undefined
 let sa_board = undefined
 let sa_keys = undefined
 let sa_edition = undefined
+let selectedCell = -1
 
 let mode_index = 0
 let mode = CONSTANT.MODE_INDEX[mode_index]
@@ -129,14 +135,27 @@ level_input.addEventListener('click', (e) => {
   e.target.innerHTML = CONSTANT.LEVEL_NAME[level_index]
 })
 
+erase_btn.addEventListener('click', () => {
+  console.log('erase_btn')
+  if (!cells[selectedCell].classList.contains('filled')) {
+    cells[selectedCell].innerHTML = ''
+    cells[selectedCell].removeAttribute('data-value')
+    removeErr()
+  }
+})
+
 document.querySelector('#btn-play').addEventListener('click', () => {
   if (name_input.value.length > 0) {
+    console.log('#btn-play')
     document.getElementById('info-issue-container').classList.add('unhide')
     document.getElementById('info-issue-container').classList.remove('hide')
     setGameVariables()
-    setGameGrid(gridSize)
-    initGameGrid()
     startGame()
+    testVarables()
+    setGameGrid(gridSize)
+
+    initGameGrid()
+    sudokuToDiv()
     setNumberKeys(gridSize)
     console.log('sa_edition', sa_edition)
     document.getElementById(
@@ -173,8 +192,6 @@ document.querySelector('#btn-resume').addEventListener('click', () => {
   pause_screen.classList.remove('active')
   document.querySelector('#btn-pause').innerHTML = 'Pause'
   paused = false
-  clearSudoku()
-  clearKeyboard()
 })
 
 document.querySelector('#btn-new-game').addEventListener('click', () => {
@@ -191,6 +208,7 @@ const showTime = (seconds) =>
 
 // Add space for each 9 cell block
 function initGameGrid() {
+  console.log('initGameGrid')
   let index = 0
   for (let i = 0; i < Math.pow(gridSize, 2); i++) {
     let row = Math.floor(i / gridSize)
@@ -205,6 +223,11 @@ function initGameGrid() {
 function initSudoku() {
   //  get sudoku board, solution and keys from JSON file
   console.log('initSudoku')
+  // clear sudoku board and keyboard
+  clearSudoku()
+  clearKeyboard()
+
+  // get sudoku board, solution and keys from JSON file
   sa = sudokuGen(modeInput, gridInput, gameTypeInput, levelInput)
   sa_solution = [...sa.solution]
   sa_board = [...sa.board]
@@ -212,7 +235,190 @@ function initSudoku() {
   sa_edition = sa.edition
 
   console.table(sa_board)
+}
 
+function hoverBg(index) {
+  console.log('hoverBg-index', index)
+  let row = Math.floor(index / gridSize)
+  let col = index % gridSize
+
+  let box_start_row = row - (row % 3)
+  let box_start_col = col - (col % 3)
+
+  for (let i = 0; i < boxSize[0]; i++) {
+    for (let j = 0; j < boxSize[1]; j++) {
+      let cell = cells[9 * (box_start_row + i) + (box_start_col + j)]
+      cell.classList.add('hover')
+    }
+  }
+
+  let step = gridSize
+  while (index - step >= 0) {
+    cells[index - step].classList.add('hover')
+    step += gridSize
+  }
+  step = gridSize
+  while (index + step < gridSize * gridSize) {
+    cells[index + step].classList.add('hover')
+    step += gridSize
+  }
+
+  step = 1
+  while (index - step >= gridSize * row) {
+    cells[index - step].classList.add('hover')
+    step += 1
+  }
+
+  step = 1
+  while (index + step < gridSize * row + gridSize) {
+    cells[index + step].classList.add('hover')
+    step += 1
+  }
+}
+
+function resetBG() {
+  cells.forEach((e) => {
+    e.classList.remove('hover')
+  })
+}
+
+function checkErr(value) {
+  const addErr = (cells) => {
+    if (parseInt(cells.getAttribute('data-value')) === parseInt(value)) {
+      cells.classList.add('err')
+      cells.classList.add('cell-err')
+      setTimeout(() => {
+        cells.classList.remove('cell-err')
+      }, 500)
+    }
+  }
+  let index = selectedCell
+  let row = Math.floor(index / gridSize)
+  let col = index % gridSize
+
+  let box_start_row = row - (row % 3)
+  let box_start_col = col - (col % 3)
+
+  for (let i = 0; i < boxSize[0]; i++) {
+    for (let j = 0; j < boxSize[1]; j++) {
+      let cell = cells[9 * (box_start_row + i) + (box_start_col + j)]
+      if (!cell.classList.contains('selected')) {
+        addErr(cell)
+      }
+    }
+  }
+
+  let step = gridSize
+  while (index - step >= 0) {
+    addErr(cells[index - step])
+    step += gridSize
+  }
+  step = gridSize
+  while (index + step < gridSize * gridSize) {
+    addErr(cells[index + step])
+    step += gridSize
+  }
+
+  step = 1
+  while (index - step >= gridSize * row) {
+    addErr(cells[index - step])
+    step += 1
+  }
+
+  step = 1
+  while (index + step < gridSize * row + gridSize) {
+    addErr(cells[index + step])
+    step += 1
+  }
+}
+
+function removeErr() {
+  cells.forEach((e) => {
+    e.classList.remove('err')
+  })
+}
+
+function saveGameInfo() {
+  let game = {
+    level: level_index,
+    seconds: seconds,
+    mode: mode_index,
+    grid: grid_index,
+    game_type: game_type_index,
+    sa: {
+      board: sa.board,
+      solution: sa.solution,
+      keys: sa.keys,
+      edition: sa.edition,
+      answer: sa_board,
+    },
+  }
+  localStorage.setItem('game', JSON.stringify(game))
+  console.log('game', game)
+}
+
+function removeGameInfo() {
+  console.log('removeGameInfo')
+  localStorage.removeItem('game')
+  document.getElementById('btn-continue').style.display = 'none'
+}
+
+function isGameWin() {
+  console.log('isGameWin')
+  // TODO: need to add this function to the sudoku.js file
+  // sudokuCheck(sa_board)
+}
+
+function initNumberInputEvent() {
+  // init number input event
+  console.log('initNumberInput')
+  numberInputs.forEach((e, index) => {
+    e.addEventListener('click', () => {
+      console.log('numberInputs', index)
+      if (!cells[selectedCell].classList.contains('filled')) {
+        cells[selectedCell].innerHTML = sa_keys[index]
+        cells[selectedCell].setAttribute('data-value', sa_keys[index])
+        // add to answer array
+        let row = Math.floor(selectedCell / gridSize)
+        let col = selectedCell % gridSize
+        sa_board[row][col] = sa_keys[index + 1]
+        // save game
+        saveGameInfo()
+        // ---------
+        removeErr()
+        checkErr(sa_keys[index])
+        cells[selectedCell].classList.add('zoom-in')
+        setTimeout(() => {
+          cells[selectedCell].classList.remove('zoom-in')
+        }, 500)
+
+        // check if won
+        // TODO: need to add this function to the sudoku.js file
+        // --------
+      }
+    })
+  })
+}
+
+function initCellsEvent() {
+  cells.forEach((e, index) => {
+    e.addEventListener('click', () => {
+      console.log(index)
+
+      if (!e.classList.contains('filled')) {
+        cells.forEach((e) => e.classList.remove('selected'))
+
+        selectedCell = index
+        e.classList.remove('err')
+        e.classList.add('selected')
+        resetBG()
+        hoverBg(index)
+      }
+    })
+  })
+}
+
+function sudokuToDiv() {
   // show sudoku to div
   for (let i = 0; i < Math.pow(gridSize, 2); i++) {
     let row = Math.floor(i / gridSize)
@@ -234,6 +440,28 @@ function setGameVariables() {
   gridSize = CONSTANT.GRID_SIZE[grid_index]
   gameTypeInput = CONSTANT.GAME_TYPE_NAME[game_type_index]
   levelInput = CONSTANT.LEVEL_NAME[level_index]
+  switch (grid_index) {
+    case 0:
+      gridSize = CONSTANT.GRID_4X4.SIZE
+      boxSize = CONSTANT.GRID_4X4.BOX_SIZE
+      break
+    case 1:
+      gridSize = CONSTANT.GRID_6X6.SIZE
+      boxSize = CONSTANT.GRID_6X6.BOX_SIZE
+      break
+    case 2:
+      gridSize = CONSTANT.GRID_8X8.SIZE
+      boxSize = CONSTANT.GRID_8X8.BOX_SIZE
+      break
+    case 3:
+      gridSize = CONSTANT.GRID_9X9.SIZE
+      boxSize = CONSTANT.GRID_9X9.BOX_SIZE
+      break
+    default:
+      gridSize = CONSTANT.GRID_9X9.SIZE
+      boxSize = CONSTANT.GRID_9X9.BOX_SIZE
+      break
+  }
 }
 
 function startGame() {
@@ -278,6 +506,7 @@ function returnToStartScreen() {
 }
 
 const init = () => {
+  console.log('init')
   const is_dark_mode = JSON.parse(localStorage.getItem('darkMode'))
   body.classList.toggle(is_dark_mode ? 'dark' : 'light')
   document
@@ -303,18 +532,21 @@ const init = () => {
 }
 
 function setGameGrid(grid) {
+  console.log('setGameGrid')
   for (let row = 0; row < grid; row++) {
     for (let col = 0; col < grid; col++) {
       let tile = document.createElement('div')
-      tile.id = `${row}-${col}`
+      // tile.id = `${row}-${col}`
       tile.classList.add('main-grid-cell')
       document.getElementById('main-sudoku-grid').append(tile)
     }
   }
   cells = document.querySelectorAll('.main-grid-cell')
+  initCellsEvent()
 }
 
 function setNumberKeys(grid) {
+  console.log('setNumberKeys')
   for (let row = 0; row < grid; row++) {
     let tile = document.createElement('div')
     tile.id = `${row}`
@@ -323,9 +555,11 @@ function setNumberKeys(grid) {
     document.getElementById('numbers').append(tile)
   }
   numberInputs = document.querySelectorAll('.number')
+  initNumberInputEvent()
 }
 
 function clearSudoku() {
+  console.log('clearSudoku')
   let childDivs
   if (document.querySelector('.main-grid-cell')) {
     for (let i = 0; i < Math.pow(gridSize, 2); i++) {
@@ -361,6 +595,7 @@ function clearKeyboard() {
 }
 
 function testVarables() {
+  console.log('testVarables')
   console.log('Player Name: ', playerInput)
   console.log('Mode: ', modeInput)
   console.log('Grid: ', gridInput)
@@ -368,6 +603,10 @@ function testVarables() {
   console.log('Game Type: ', gameTypeInput)
   console.log('Level: ', levelInput)
   console.log('Seed: ', seed)
+  console.log('Mode Index: ', mode_index)
+  console.log('Grid Index: ', grid_index)
+  console.log('Game Type Index: ', game_type_index)
+  console.log('Level Index: ', level_index)
 }
 
 init()

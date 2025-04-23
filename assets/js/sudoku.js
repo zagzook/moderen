@@ -30,6 +30,31 @@ export function sudokuGen(mode, grid, gameType, level) {
   }
 }
 
+export function sudokuCheck(grid) {
+  let unassigned_pos = {
+    row: -1,
+    col: -1,
+  }
+
+  if (!findUnassignedPos(grid, unassigned_pos)) return true
+
+  grid.forEach((row, i) => {
+    row.forEach((num, j) => {
+      if (isSafe(grid, i, j, num)) {
+        if (isFullGrid(grid)) {
+          return true
+        } else {
+          if (sudokuCreate(grid)) {
+            return true
+          }
+        }
+      }
+    })
+  })
+
+  return isFullGrid(grid)
+}
+
 function sudoku9x9Gen(mode, grid, gameType, level) {
   console.log('sudoku9x9Gen')
   let totalSolutions = 0
